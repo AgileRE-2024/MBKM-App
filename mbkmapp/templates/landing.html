@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{% load static %}
+
+<section class="hero-section">
+    <div class="hero-content">
+      <h1>SISTEM MANAJEMEN KAMPUS MERDEKA</h1>
+      <p>"Menghubungkan Pembelajaran dengan Pengalaman Nyata untuk Masa Depan yang Lebih Baik."</p>
+      <div class="student-count">
+        <span>257+rb</span>
+        <p>Total Mahasiswa</p>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="{% static 'img/student.png' %}" alt="Student Icon">
+    </div>
+  </section>
+
+  <section class="program-section">
+    <h2>Daftar Program</h2>
+    <div class="program-list">
+      <div class="program-item">
+        <div class="program-icon"><img src="{% static 'img/sks.png' %}" alt="SKS Icon"></div>
+        <h3>Pengajuan konversi SKS</h3>
+        <p>Pengajuan konversi SKS adalah proses di mana mahasiswa dapat mengajukan permohonan untuk mengubah kegiatan MBKM, seperti magang, proyek kemanusiaan, atau studi independen, menjadi SKS.</p>
+      </div>
+      <div class="program-item">
+        <div class="program-icon"><img src="{% static 'img/program.png' %}" alt="Registration Icon"></div>
+        <h3>Pendaftaran Program</h3>
+        <p>Pendaftaran program MBKM adalah langkah bagi mahasiswa untuk mendaftar dan mengikuti program yang tersedia, seperti magang, proyek kewirausahaan, atau pertukaran pelajar.</p>
+      </div>
+      <div class="program-item">
+        <div class="program-icon"><img src="{% static 'img/informasi.png' %}" alt="Info Icon"></div>
+        <h3>Informasi Program</h3>
+        <p>Informasi program MBKM memberikan rincian lengkap tentang setiap program yang ditawarkan, termasuk tujuan, durasi, materi, persyaratan, serta manfaat bagi peserta.</p>
+      </div>
+    </div>
+  </section>
+
+
+    
+{% endblock content %}
+    

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    
+    <h2 class="display-6 fw-bold">DAFTAR PROGRAM TERSEDIA</h2>
+    <div class="border-bottom border-primary w-25 mx-auto mt-2"></div>
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Mahasiswa</th>
+                <th>Mata Kuliah Konversi</th>
+                <th>Status</th>
+                <th>Dokumen</th>
+                <th>IPK</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for loa in loa_list %}
+            <tr>
+                <td data-label="Mahasiswa">{{ loa.konversi.mahasiswa.user.get_full_name }}</td>
+                <td data-label="Mata Kuliah Konversi">
+                        <ul>
+                            {% for matkul in konversi.matkul_konversi.all %}
+                                <li>{{ matkul.nama_mk }}</li>
+                            {% empty %}
+                                Tidak ada mata kuliah
+                            {% endfor %}
+                        </ul>
+                </td>
+                <td data-label="Status">
+                    {% for key, value in STATUS_CHOICES.items %}
+                        {% if key == loa.status %}
+                        <span class="badge 
+                                {% if loa.status == 'diterima' %}
+                                    bg-success
+                                {% elif loa.status == 'ditolak' %}
+                                    bg-danger
+                                {% else %}
+                                    bg-warning
+                                {% endif %}
+                            ">{{ value }}
+                        </span>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td data-label="Dokumen">
+                    {% if loa.loa_file %}
+                        <a href="{{ loa.loa_file.url }}" target="_blank">Lihat Dokumen</a>
+                    {% else %}
+                        Tidak ada dokumen
+                    {% endif %}
+                </td>
+                <td data-label="IPK">{{ loa.konversi.mahasiswa.ipk_mhs }}</td>
+                <td data-label="Aksi">
+                    {% if loa.status == 'sedang_diverifikasi' %}
+                        <a href="{% url 'accept_loa' loa.id %}" class="btn btn-success btn-sm">Terima</a>
+                        <a href="{% url 'reject_loa' loa.id %}" class="btn btn-danger btn-sm">Tolak</a>
+                    {% else %}
+                        {{ loa.get_status_display }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">Tidak ada data LOA</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

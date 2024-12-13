@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block content %}
+
+
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="form-container">
+        <div class="form-title">FORM KONVERSI</div>
+        <div class="form-content">
+            <!-- Sidebar Steps -->
+            <div class="form-sidebar">
+                <ul>
+                    <li class="active"><span class="dot"></span>Download Document</li>
+                    <li><span class="dot"></span>Data Konversi</li>
+                    <li><span class="dot"></span>Status</li>
+                </ul>
+            </div>
+            <!-- Form Main Content -->
+            <div class="form-main">
+                <!-- Button for Downloading the File -->
+                <div class="form-buttons">
+                    <a href="{% static 'pdf/Form.pdf' %}?id={{ program_id }}" download="formulir-mbkm.pdf" class="btn btn-link" style="text-decoration: none; color: black;">
+                        <img src="{% static 'img/pdf-icon.svg' %}" alt="Download Form" class="me-2">
+                        Click pdf image to download
+                    </a>
+                </div>
+            
+                <!-- Buttons for navigation -->
+                <div class="form-buttons">
+                <button class="btn-back" onclick="window.history.back()">Kembali</button>
+                <a class="btn-next btn btn-primary" href="{% url 'form_konversi' program.id %}">Selanjutnya</a>
+                </div>
+            </div>
+  
+            
+        </div>
+    </div>
+
+</div>
+
+
+    
+{% endblock content %}
+    

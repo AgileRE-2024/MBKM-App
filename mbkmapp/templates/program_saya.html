@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Program Saya</h1>
+    
+    {% if konversi_list %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped">
+                <thead class="table-primary text-center">
+                    <tr class="table-kolom">
+                        <th>Nama Program</th>
+                        <th>Mata Kuliah Konversi</th>
+                        <th>IPK</th>
+                        <th>Status Verifikasi Doswal</th>
+                        <th>Tanggal Mendaftar</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for konversi in konversi_list %}
+                    <tr>
+                        <td>{{ konversi.program.nama_program }}</td>
+                        <td>
+                            <ul>
+                                {% for matkul in konversi.matkul_konversi.all %}
+                                    <li>{{ matkul.nama_mk }}</li>
+                                {% empty %}
+                                    Tidak ada mata kuliah
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        
+                        <td>{{ konversi.mahasiswa.ipk_mhs }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if konversi.status == 'diterima' %}
+                                    bg-success
+                                {% elif konversi.status == 'ditolak' %}
+                                    bg-danger
+                                {% else %}
+                                    bg-warning
+                                {% endif %}
+                            ">
+                                {{ konversi.get_status_display|title }}
+                            </span>
+                        </td>
+                        <td>{{ konversi.created_at|date:"Y-m-d H:i" }}</td>
+                        <td>
+                            <a href="{% url 'status_daftar' konversi.id %}" class="btn btn-info btn-sm text-light">
+                                Lihat Status
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center" role="alert">
+            Anda belum daftar program.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

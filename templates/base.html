@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% load static %}
+
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+        <link href="{% static 'css/style.css' %}" rel="stylesheet">
+        
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link href="{% static 'css/navbar.css' %}" rel="stylesheet">
+    </head>
+    <style>
+        .alert-success {
+            background-color: #d4edda !important;
+            color: #155724 !important;
+            border-color: #c3e6cb !important;
+        }
+        
+    </style>
+    <body>
+
+        {% include 'navbar.html' %}
+
+        {% if messages %}
+        <div class="container d-flex justify-content-center mt-5">
+            <div class="col-md-8">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm rounded text-center" role="alert">
+                    <i class="icon me-2 {% if 'success' in message.tags %}fas fa-check-circle text-success{% elif 'danger' in message.tags %}fas fa-exclamation-triangle text-danger{% elif 'warning' in message.tags %}fas fa-exclamation-circle text-warning{% elif 'info' in message.tags %}fas fa-info-circle text-info{% endif %}"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                
+                {% endfor %}
+            </div>
+        </div>
+        <div class="container d-flex justify-content-center mt-2">
+            <div class="col-md-8">
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        {% for error in form.non_field_errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        
+        {% block content %}
+        {% endblock content %}
+
+
+        <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        
+    </body>
+</html>

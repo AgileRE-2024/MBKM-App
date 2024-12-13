@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load widget_tweaks %}
+
+<div class="container status-container mt-5">
+    <h2 class="text-center mb-4">STATUS KONVERSI</h2>
+    
+    <div class="row">
+        <!-- Step Indicator -->
+        <div class="col-md-4 d-flex flex-column align-items-center">
+            <ul class="step-indicator list-unstyled">
+                <li><span class="step-circle"></span> Data Mahasiswa</li>
+                <li><span class="step-circle"></span> Download Document</li>
+                <li><span class="step-circle"></span> Data Konversi</li>
+                <li class="active"><span class="step-circle active-circle"></span> Status</li>
+            </ul>
+        </div>
+
+        <!-- Status Section -->
+        <div class="col-md-4">
+            <div class="status-box">
+                <p>
+                    <span class="status-indicator {% if konversi.status == 'sedang_diverifikasi' %}status-pending-active{% else %}status-pending{% endif %}"></span> 
+                    Sedang Diverifikasi
+                </p>
+                <p>
+                    <span class="status-indicator {% if konversi.status == 'diterima' %}status-accepted-active{% else %}status-accepted{% endif %}"></span> 
+                    Diterima
+                </p>
+                <p>
+                    <span class="status-indicator {% if konversi.status == 'ditolak' %}status-rejected-active{% else %}status-rejected{% endif %}"></span> 
+                    Ditolak
+                </p>
+            </div>
+
+            <!-- Tombol Edit -->
+            {% if konversi.status == 'diterima' %}
+                {% if not loa or loa.status == 'sedang_diverifikasi' or loa.status == 'ditolak' %}
+                    <div class="mt-3 text-center">
+                        <a href="{% url 'form_konversi' konversi.program.id %}?edit=true" class="btn btn-warning">
+                            Edit Data Konversi
+                        </a>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <!-- LOA Status Section -->
+        {% if konversi.status == 'diterima' %}
+        <div class="col-md-4">
+            {% if loa and loa.loa_file %}
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-3">Status LOA</h5>
+                    <div class="status-box">
+                        <p class="d-flex align-items-center">
+                            <span class="status-indicator {% if loa.status == 'sedang_diverifikasi' %}status-pending-active{% else %}status-pending{% endif %}"></span>
+                            Sedang Diverifikasi
+                        </p>
+                        <p class="d-flex align-items-center">
+                            <span class="status-indicator {% if loa.status == 'diterima' %}status-accepted-active{% else %}status-accepted{% endif %}"></span>
+                            Diterima
+                        </p>
+                        <p class="d-flex align-items-center">
+                            <span class="status-indicator {% if loa.status == 'ditolak' %}status-rejected-active{% else %}status-rejected{% endif %}"></span>
+                            Ditolak
+                        </p>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <a href="{{ loa.loa_file.url }}" class="btn btn-success btn-sm" download>Download LOA</a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <!-- LOA Upload Section -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="text-center mb-3">Letter of Acceptance (LOA)</h5>
+                    <form method="post" enctype="multipart/form-data" class="text-center">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            {{ form.loa_file|add_class:"form-control" }}
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload LOA</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Detail Konversi Section -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Detail Konversi</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Mata Kuliah yang Dikonversi:</h6>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Kode MK</th>
+                                    <th>Nama Mata Kuliah</th>
+                                    <th>SKS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for mk in konversi.matkul_konversi.all %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ mk.kode_mk }}</td>
+                                    <td>{{ mk.nama_mk }}</td>
+                                    <td>{{ mk.sks_mk }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% if konversi.document %}
+                    <div class="mt-3">
+                        <h6>Dokumen Pendukung:</h6>
+                        <a href="{{ konversi.document.url }}" class="btn btn-info btn-sm" target="_blank">
+                            Lihat Dokumen
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    
+{% endblock %}

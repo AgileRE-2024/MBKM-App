@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Daftar Konversi Mahasiswa</h2>
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Mahasiswa</th>
+                <th>Mata Kuliah Konversi</th>
+                <th>Status</th>
+                <th>IPK</th>
+                <th>Dokumen</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for konversi in konversi_list %}
+            <tr>
+                <td>{{ konversi.mahasiswa.user.get_full_name }}</td>
+                <td>
+                    <ul>
+                        {% for matkul in konversi.matkul_konversi.all %}
+                            <li>{{ matkul.nama_mk }}</li>
+                        {% empty %}
+                            Tidak ada mata kuliah
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td class="me-4 mx-auto text-light badge 
+                                {% if konversi.status == 'diterima' %}
+                                    bg-success
+                                {% elif konversi.status == 'ditolak' %}
+                                    bg-danger
+                                {% else %}
+                                    bg-warning
+                                {% endif %}">{{ konversi.get_status_display }}</td>
+                <td>{{ konversi.mahasiswa.ipk_mhs }}</td>
+                <td>
+                    {% if konversi.document %}
+                        <a href="{{ konversi.document.url }}" target="_blank">Lihat Dokumen</a>
+                    {% else %}
+                        Tidak ada dokumen
+                    {% endif %}
+                </td>
+                <td>
+                    {% if konversi.status == 'sedang_diverifikasi' %}
+                        <a href="{% url 'accept_konversi' konversi.id %}" class="btn btn-success btn-sm">Terima</a>
+                        <a href="{% url 'reject_konversi' konversi.id %}" class="btn btn-danger btn-sm">Tolak</a>
+                    {% else %}
+                        {{ konversi.get_status_display }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

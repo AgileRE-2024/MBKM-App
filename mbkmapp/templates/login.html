@@ -1,0 +1,266 @@
+{% extends 'base-login.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="auth-container">
+    <h2 class="auth-title">Login</h2>
+    <form id="registerForm" method="post" novalidate>
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="text-danger">
+                    {% for error in form.username.errors %}
+                        <small>{{ error }}</small>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.password }}
+            {% if form.password.errors %}
+                <div class="text-danger">
+                    {% for error in form.password.errors %}
+                        <small>{{ error }}</small>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Sign Up</button>
+    </form>
+    <div class="login-link">
+        don't have an account? <a href="#" id="register-link">Register here</a>
+    </div>
+</div>
+
+<!-- Modal Registration Options -->
+<div class="modal fade" id="registrationModal" tabindex="-1" aria-labelledby="registrationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registrationModalLabel">Pilih Tipe Registrasi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="registration-options">
+                    <a href="{% url 'register_mahasiswa' %}" class="registration-option">
+                        <div class="option-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="option-text">
+                            <h4>Registrasi Mahasiswa</h4>
+                            <p>Daftar sebagai mahasiswa</p>
+                        </div>
+                    </a>
+                    
+                    <a href="{% url 'register_dosen' %}" class="registration-option">
+                        <div class="option-icon">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <div class="option-text">
+                            <h4>Registrasi Dosen</h4>
+                            <p>Daftar sebagai dosen</p>
+                        </div>
+                    </a>
+                    
+                    <a href="{% url 'register_timkonversi' %}" class="registration-option">
+                        <div class="option-icon">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        <div class="option-text">
+                            <h4>Registrasi Tim Konversi</h4>
+                            <p>Daftar sebagai tim konversi</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Modal Styles */
+.modal-content {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #1e4976, #0d2847);
+    color: white;
+    border-radius: 15px 15px 0 0;
+    padding: 20px;
+    border: none;
+}
+
+.modal-title {
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.btn-close {
+    filter: brightness(0) invert(1);
+    opacity: 0.8;
+}
+
+.modal-body {
+    padding: 30px;
+}
+
+/* Registration Options */
+.registration-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.registration-option {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #1a2942;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.registration-option:hover {
+    background: white;
+    border-color: #1e4976;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(30,73,118,0.1);
+}
+
+.option-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #1e4976, #0d2847);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    color: white;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.option-text {
+    flex: 1;
+}
+
+.option-text h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1a2942;
+}
+
+.option-text p {
+    margin: 5px 0 0;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* Animation */
+.registration-option {
+    animation: slideIn 0.3s ease forwards;
+    opacity: 0;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.registration-option:nth-child(1) { animation-delay: 0.1s; }
+.registration-option:nth-child(2) { animation-delay: 0.2s; }
+.registration-option:nth-child(3) { animation-delay: 0.3s; }
+
+/* Responsive Design */
+@media (max-width: 576px) {
+    .modal-dialog {
+        margin: 1rem;
+    }
+    
+    .registration-option {
+        padding: 15px;
+    }
+    
+    .option-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    
+    .option-text h4 {
+        font-size: 1rem;
+    }
+    
+    .option-text p {
+        font-size: 0.8rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get registration link and modal
+    const registerLink = document.getElementById('register-link');
+    let registrationModal;
+    
+    // Add click event to register link
+    registerLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!registrationModal) {
+            registrationModal = new bootstrap.Modal(document.getElementById('registrationModal'));
+        }
+        registrationModal.show();
+    });
+
+    // Add effects to registration options
+    const options = document.querySelectorAll('.registration-option');
+    options.forEach(option => {
+        option.addEventListener('click', function(e) {
+            e.preventDefault();
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                window.location.href = this.href;
+            }, 150);
+        });
+    });
+
+    // Handle modal animations
+    const modal = document.getElementById('registrationModal');
+    
+    modal.addEventListener('hidden.bs.modal', function () {
+        const options = this.querySelectorAll('.registration-option');
+        options.forEach(option => {
+            option.style.opacity = '0';
+        });
+    });
+
+    modal.addEventListener('show.bs.modal', function () {
+        const options = this.querySelectorAll('.registration-option');
+        options.forEach((option, index) => {
+            setTimeout(() => {
+                option.style.opacity = '1';
+            }, (index + 1) * 100);
+        });
+    });
+});
+</script>
+{% endblock content %}

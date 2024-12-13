@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block content %}
+
+
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="form-container">
+        <div class="form-title">FORM KONVERSI</div>
+        <div class="form-content">
+            <!-- Sidebar Steps -->
+            <div class="form-sidebar">
+                <ul>
+                    <li class="active"><span class="dot"></span>Data Mahasiswa</li>
+                    <li><span class="dot"></span>Download Document</li>
+                    <li><span class="dot"></span>Data Konversi</li>
+                    <li><span class="dot"></span>Status</li>
+                </ul>
+            </div>
+
+            <!-- Form Main Content -->
+            <form action="" method="post" class="form-main">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.semester.label_tag }}
+                    {{ form.semester }}
+                </div>
+                <div class="form-buttons">
+                    <button class="btn-back" type="button" onclick="window.history.back()">Kembali</button>
+                    <button class="btn-next btn btn-primary" type="submit">Selanjutnya</button>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+
+</div>
+
+
+    
+{% endblock content %}
+    

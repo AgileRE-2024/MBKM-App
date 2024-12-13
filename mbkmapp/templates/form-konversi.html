@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="form-container">
+        <div class="form-title">FORM KONVERSI</div>
+        
+        <!-- Informasi SKS - Pindahkan ke atas form -->
+        <div class="sks-info alert alert-info mb-3">
+            <p class="mb-1">Total SKS Program: {{ program.sks }} SKS</p>
+            <p class="mb-0">Total SKS Yang Dipilih: <span id="total-sks-terpilih">0</span> SKS</p>
+        </div>
+
+        <div class="form-content">
+            <div class="form-sidebar">
+                <ul>
+                    <li><span class="dot"></span>Download Document</li>
+                    <li class="active"><span class="dot"></span>Data Konversi</li>
+                    <li><span class="dot"></span>Status</li>
+                </ul>
+            </div>
+
+            <form action="" method="post" class="form-main" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                
+
+                <!-- Mata Kuliah Konversi field -->
+                <!-- Di dalam form, pastikan name attribute benar -->
+                <div class="form-group-matkul mb-4">
+                    <label class="form-label">
+                        Mata Kuliah Konversi
+                    </label>
+                    <div class="custom-checkbox-container-matkul">
+                        {% for matkul in form.fields.matkul_konversi.queryset %}
+                            <div class="form-check">
+                                <input type="checkbox"
+                                    name="matkul_konversi"
+                                    value="{{ matkul.id }}"
+                                    class="form-check-input"
+                                    id="matkul_{{ matkul.id }}"
+                                    {% if matkul.id in form.data.matkul_konversi %}checked{% endif %}
+                                    data-sks="{{ matkul.sks_mk }}">
+                                <label class="form-check-label" for="matkul_{{ matkul.id }}">
+                                    {{ matkul.nama_mk }} ({{ matkul.sks_mk }} SKS)
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% if form.matkul_konversi.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{ form.matkul_konversi.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                
+
+                <!-- Document field -->
+                <div class="form-group mb-4">
+                    <label class="form-label">
+                        Dokumen Pendukung
+                    </label>
+                    {{ form.document }}
+                    {% if form.document.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {% for error in form.document.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-buttons mt-4">
+                    <button class="btn-back btn btn-secondary" type="button" onclick="window.history.back()">Kembali</button>
+                    <button class="btn-next btn btn-primary" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('input[name="matkul_konversi"]');
+    const totalSksProgram = {{ program.sks }};
+    const sksInfo = document.querySelector('.sks-info');
+    const totalSksTerpilih = document.getElementById('total-sks-terpilih');
+    
+    function updateTotalSks() {
+        let totalSks = 0;
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                const sks = parseInt(checkbox.getAttribute('data-sks')) || 0;
+                totalSks += sks;
+            }
+        });
+        
+        totalSksTerpilih.textContent = totalSks;
+        
+        if (totalSks > totalSksProgram) {
+            sksInfo.classList.remove('alert-info');
+            sksInfo.classList.add('alert-danger');
+        } else {
+            sksInfo.classList.remove('alert-danger');
+            sksInfo.classList.add('alert-info');
+        }
+    }
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateTotalSks);
+    });
+    
+    // Initial calculation
+    updateTotalSks();
+});
+</script>
+
+
+{% endblock content %}

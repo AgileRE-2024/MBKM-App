@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <section class="programs-section">
+        <div class="text-center mb-4">
+            <h2 class="display-6 fw-bold">DAFTAR PROGRAM TERSEDIA</h2>
+            <div class="border-bottom border-primary w-25 mx-auto mt-2"></div>
+        </div>
+
+        {% if programs %}
+        <div class="row g-4">
+            {% for program in programs %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="program-info">    
+                            <h3 class="h5 fw-bold text-primary mb-3">{{ program.nama_program }}</h3>
+                            <div class="mb-2 d-flex align-items-center">
+                                <i class="fas fa-building text-secondary me-2"></i>
+                                <span>{{ program.penyelenggara }}</span>
+                            </div>
+                            <div class="mb-2 d-flex align-items-center">
+                                <i class="fas fa-clock text-secondary me-2"></i>
+                                <span>{{ program.durasi }}</span>
+                            </div>
+                            <div class="mb-3">
+                                <span class="badge bg-primary rounded-pill">
+                                    <i class="fas fa-graduation-cap me-1"></i>
+                                    {{ program.sks }} SKS
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="program-meta pt-3 border-top d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-users text-secondary me-2"></i>
+                                <span>Kuota: {{ program.kuota }} Orang</span>
+                            </div>
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'detail_program' program.id %}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-eye me-1"></i> Lihat
+                                </a>
+                            {% else %}
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#loginModal">
+                                    <i class="fas fa-sign-in-alt me-1"></i> Daftar
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center mt-5">
+            <div class="alert alert-info d-inline-block">
+                <i class="fas fa-info-circle me-2"></i>
+                Tidak ada program yang tersedia.
+            </div>
+        </div>
+        {% endif %}
+    </section>
+</div>
+
+<!-- Modal untuk notifikasi login -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="loginModalLabel">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    Peringatan
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-4">
+                <p class="mb-0 text-center">Anda harus login terlebih dahulu sebelum mendaftar program ini.</p>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>
+                    Tutup
+                </button>
+                <a href="{% url 'login' %}" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt me-2"></i>
+                    Login
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pastikan menambahkan Font Awesome dan Bootstrap jika belum ada di base template -->
+{% if not 'fontawesome' in request.META.HTTP_USER_AGENT|lower %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endif %}
+{% endblock content %}

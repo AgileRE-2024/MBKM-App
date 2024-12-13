@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+
+{% block content %}
+
+<section class="program-details-section">
+    <div class="program-details-header">
+        <h2>{{ program.nama_program }}</h2>
+        <p class="sks">{{ program.sks }} SKS</p>
+    </div>
+    <div class="program-meta container mt-3">
+        <div class="row">
+            <!-- Left Column: Penyelenggara and Durasi Program -->
+            <div class="col-md-8">
+                <p><strong>Penyelenggara:</strong> {{ program.penyelenggara }}</p>
+                <p><strong>Durasi Program:</strong> {{ program.durasi }}</p>
+                <p class="quota mt-2"><strong>Kuota:</strong> {{ program.kuota }} Orang</p>
+            </div>
+    
+            <!-- Right Column: Daftar Button and Sisa Kuota -->
+            <!-- Di detail-program.html -->
+            <div class="col-md-4 text-start">
+                {% if user.is_authenticated and user.mahasiswa %}
+                    {% if konversi_mahasiswa %}
+                        <div class="mb-2">
+                            <span class="badge {% if konversi_mahasiswa.status == 'diterima' %}bg-success
+                                            {% elif konversi_mahasiswa.status == 'ditolak' %}bg-danger
+                                            {% else %}bg-warning{% endif %}">
+                                Status: {{ konversi_mahasiswa.get_status_display }}
+                            </span>
+                        </div>
+                        <a href="{% url 'status_daftar' konversi_mahasiswa.id %}" class="btn btn-warning">Edit Pendaftaran</a>
+                    {% else %}
+                        <a href="{% url 'download-form' program.id %}" class="btn btn-primary register-button">Daftar</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="program-description">
+        <h3>Deskripsi Program</h3>
+        <p>{{ program.deskripsi|linebreaks }}</p>
+    </div>
+
+    <div class="program-details">
+        <h3>Rincian Kegiatan</h3>
+        <ul>
+            {% for kegiatan in rincian_kegiatan %}
+                <li>{{ kegiatan|linebreaks }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="program-criteria">
+        <h3>Kriteria Peserta</h3>
+        <ul>
+            {% for kriteria in kriteria_peserta %}
+                <li>{{ kriteria|linebreaks }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="program-conversion-courses">
+        <h3>Mata Kuliah yang Bisa Dikoversi</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Kode Mata Kuliah</th>
+                    <th>Nama Mata Kuliah (MK)</th>
+                    <th>SKS MK</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mk in mata_kuliah_list %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ mk.kode_mk }}</td>
+                        <td>{{ mk.nama_mk }}</td>
+                        <td>{{ mk.sks_mk }}</td>
+                    </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    
+</section>
+
+
+    
+{% endblock content %}
+    
